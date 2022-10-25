@@ -3,9 +3,9 @@ import Config
 # Configure your database
 config :happy_hour, HappyHour.Repo,
   username: "postgres",
-  password: "postgres",
+  password: "mysecretpassword",
   database: "happy_hour_dev",
-  hostname: "localhost",
+  hostname: "172.17.0.2",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
 
