@@ -14,8 +14,8 @@ defmodule HappyHour.Games.Question do
   @doc false
   def changeset(question, attrs) do
     question
-    |> cast(attrs, [:text, :answered, :player])
-    |> validate_required([:text, :answered, :player])
-    |> put_assoc(:player)
+    |> cast(attrs, [:text, :answered])
+    |> validate_required([:text, :answered])
+    |> cast_assoc(:player)
   end
 end
