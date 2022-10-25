@@ -32,3 +32,5 @@ happy_hour-*.tar
 npm-debug.log
 /assets/node_modules/
 
+.*.swp
+.*.swo
