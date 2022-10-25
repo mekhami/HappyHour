@@ -7,9 +7,9 @@ import Config
 # Run `mix help test` for more information.
 config :happy_hour, HappyHour.Repo,
   username: "postgres",
-  password: "postgres",
+  password: "mysecretpassword",
   database: "happy_hour_test#{System.get_env("MIX_TEST_PARTITION")}",
-  hostname: "localhost",
+  hostname: "172.17.0.2",
   pool: Ecto.Adapters.SQL.Sandbox,
   pool_size: 10
 
