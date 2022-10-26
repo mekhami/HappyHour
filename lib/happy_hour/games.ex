@@ -38,6 +38,24 @@ defmodule HappyHour.Games do
   def get_game!(id), do: Repo.get!(Game, id)
 
   @doc """
+  Gets a single game by its name.
+
+  Raises `Ecto.NoResultsError` if the Game does not exist.
+
+  ## Examples
+
+      iex> get_game_by_name!("foo")
+      %Game{name: "foo"}
+
+      iex> get_game!("not in the database")
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_game_by_name!(name) do
+    Repo.get_by!(Game, name: name)
+  end
+
+  @doc """
   Creates a game.
 
   ## Examples

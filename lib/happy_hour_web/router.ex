@@ -18,7 +18,10 @@ defmodule HappyHourWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :index
-    live "/:name", GameLive.Index
+    post "/", PageController, :create
+
+    live "/:name", GameLive.Show
+    live "/:name/admin", GameLive.Admin
   end
 
   # Other scopes may use custom stacks.

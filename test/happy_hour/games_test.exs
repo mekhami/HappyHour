@@ -21,6 +21,11 @@ defmodule HappyHour.GamesTest do
       assert Games.get_game!(game.id) == game
     end
 
+    test "get_game_by_name!/1 returns the game with given name" do
+      game = game_fixture()
+      assert Games.get_game_by_name!(game.name) == game
+    end
+
     test "create_game/1 with valid data creates a game" do
       valid_attrs = %{name: "some name"}
 
@@ -139,7 +144,7 @@ defmodule HappyHour.GamesTest do
       player = Games.add_player(game, %{name: "Lawrence"})
       question = Games.add_question(game, "who are you", player)
 
-      {:ok, question} = Games.answer_question(question)
+      {:ok, _question} = Games.answer_question(question)
 
       game = Games.get_game!(game.id) |> Repo.preload([:players, :questions])
       assert {:error, :no_unanswered_questions} = Games.get_random_question(game)
