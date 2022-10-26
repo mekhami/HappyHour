@@ -5,7 +5,7 @@ defmodule HappyHour.Repo.Migrations.CreateQuestions do
     create table(:questions) do
       add(:text, :string)
       add(:answered, :boolean, default: false, null: false)
-      add(:player_id, references(:players))
+      add(:player_id, references(:players, on_delete: :delete_all))
       add(:game_id, references(:games))
 
       timestamps()

@@ -5,6 +5,7 @@ defmodule HappyHour.Games.Game do
   schema "games" do
     field :name, :string
     has_many :questions, HappyHour.Games.Question
+    has_many :players, HappyHour.Games.Player
 
     timestamps()
   end

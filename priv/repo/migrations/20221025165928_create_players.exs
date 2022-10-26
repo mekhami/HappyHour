@@ -4,6 +4,7 @@ defmodule HappyHour.Repo.Migrations.CreatePlayers do
   def change do
     create table(:players) do
       add(:name, :string)
+      add(:game_id, references(:games))
 
       timestamps()
     end
