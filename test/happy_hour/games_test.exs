@@ -65,8 +65,9 @@ defmodule HappyHour.GamesTest do
     test "add_player/2 adds a player to a game" do
       game = game_fixture()
       assert %Player{} = Games.add_player(game, %{name: "Lawrence"})
+      assert %Player{} = Games.add_player(game, %{"name" => "James"})
       game = Games.get_game!(game.id) |> Repo.preload(:players)
-      assert [%Player{name: "Lawrence"}] = game.players
+      assert [%Player{name: "Lawrence"}, %Player{name: "James"}] = game.players
     end
 
     test "add_question/3 adds a question to a game for a player" do

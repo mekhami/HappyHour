@@ -6,7 +6,7 @@ defmodule HappyHourWeb.PageController do
     render(conn, "index.html")
   end
 
-  def create(conn, %{"post" => params}) do
+  def create(conn, params) do
     {:ok, game} = Games.create_game(%{name: params["name"]})
     redirect(conn, to: Routes.live_path(conn, HappyHourWeb.GameLive.Show, game.name))
   end

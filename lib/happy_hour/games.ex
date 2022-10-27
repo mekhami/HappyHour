@@ -13,12 +13,13 @@ defmodule HappyHour.Games do
 
   ## Examples
 
-      iex> list_games()
-      [%Game{}, ...]
+  iex> list_games()
+  [%Game{}, ...]
 
   """
   def list_games do
     Repo.all(Game)
+    |> Repo.preload([:players, :questions])
   end
 
   @doc """
@@ -28,14 +29,14 @@ defmodule HappyHour.Games do
 
   ## Examples
 
-      iex> get_game!(123)
-      %Game{}
+  iex> get_game!(123)
+  %Game{}
 
-      iex> get_game!(456)
-      ** (Ecto.NoResultsError)
+  iex> get_game!(456)
+  ** (Ecto.NoResultsError)
 
   """
-  def get_game!(id), do: Repo.get!(Game, id)
+  def get_game!(id), do: Repo.get!(Game, id) |> Repo.preload([:players, :questions])
 
   @doc """
   Gets a single game by its name.
@@ -44,15 +45,16 @@ defmodule HappyHour.Games do
 
   ## Examples
 
-      iex> get_game_by_name!("foo")
-      %Game{name: "foo"}
+  iex> get_game_by_name!("foo")
+  %Game{name: "foo"}
 
-      iex> get_game!("not in the database")
-      ** (Ecto.NoResultsError)
+  iex> get_game!("not in the database")
+  ** (Ecto.NoResultsError)
 
   """
   def get_game_by_name!(name) do
     Repo.get_by!(Game, name: name)
+    |> Repo.preload([:players, :questions])
   end
 
   @doc """
@@ -60,17 +62,26 @@ defmodule HappyHour.Games do
 
   ## Examples
 
-      iex> create_game(%{field: value})
-      {:ok, %Game{}}
+  iex> create_game(%{field: value})
+  {:ok, %Game{}}
 
-      iex> create_game(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
+  iex> create_game(%{field: bad_value})
+  {:error, %Ecto.Changeset{}}
 
   """
   def create_game(attrs \\ %{}) do
-    %Game{}
-    |> Game.changeset(attrs)
-    |> Repo.insert()
+    game =
+      %Game{}
+      |> Game.changeset(attrs)
+      |> Repo.insert()
+
+    case game do
+      {:ok, game} ->
+        {:ok, Repo.preload(game, [:players, :questions])}
+
+      {:error, changeset} ->
+        {:error, changeset}
+    end
   end
 
   @doc """
@@ -78,11 +89,11 @@ defmodule HappyHour.Games do
 
   ## Examples
 
-      iex> update_game(game, %{field: new_value})
-      {:ok, %Game{}}
+  iex> update_game(game, %{field: new_value})
+  {:ok, %Game{}}
 
-      iex> update_game(game, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
+  iex> update_game(game, %{field: bad_value})
+  {:error, %Ecto.Changeset{}}
 
   """
   def update_game(%Game{} = game, attrs) do
@@ -96,11 +107,11 @@ defmodule HappyHour.Games do
 
   ## Examples
 
-      iex> delete_game(game)
-      {:ok, %Game{}}
+  iex> delete_game(game)
+  {:ok, %Game{}}
 
-      iex> delete_game(game)
-      {:error, %Ecto.Changeset{}}
+  iex> delete_game(game)
+  {:error, %Ecto.Changeset{}}
 
   """
   def delete_game(%Game{} = game) do
@@ -112,8 +123,8 @@ defmodule HappyHour.Games do
 
   ## Examples
 
-      iex> change_game(game)
-      %Ecto.Changeset{data: %Game{}}
+  iex> change_game(game)
+  %Ecto.Changeset{data: %Game{}}
 
   """
   def change_game(%Game{} = game, attrs \\ %{}) do
@@ -121,8 +132,9 @@ defmodule HappyHour.Games do
   end
 
   def add_player(%Game{} = game, attrs \\ %{}) do
-    game
-    |> Ecto.build_assoc(:players, attrs)
+    # Add the game id to the player attrs?
+    # associate the game to the player somehow before the repo insert?
+    Player.changeset(%Player{}, attrs)
     |> Repo.insert!()
   end
 

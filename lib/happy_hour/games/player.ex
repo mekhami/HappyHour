@@ -1,6 +1,7 @@
 defmodule HappyHour.Games.Player do
   use Ecto.Schema
   import Ecto.Changeset
+  alias __MODULE__
 
   schema "players" do
     field :name, :string
@@ -11,7 +12,7 @@ defmodule HappyHour.Games.Player do
   end
 
   @doc false
-  def changeset(player, attrs) do
+  def changeset(%Player{} = player, attrs) do
     player
     |> cast(attrs, [:name])
     |> validate_required([:name])
