@@ -135,6 +135,7 @@ defmodule HappyHour.Games do
     # Add the game id to the player attrs?
     # associate the game to the player somehow before the repo insert?
     Player.changeset(%Player{}, attrs)
+    |> Ecto.Changeset.put_assoc(:game, game)
     |> Repo.insert!()
   end
 

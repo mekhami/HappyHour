@@ -16,10 +16,10 @@ defmodule HappyHourWeb.GameLive.Admin do
     ~H"""
     <h1>GameLive <%= assigns.game.name %> Admin</h1>
     <h2>Players</h2>
-    <p :if={!length(assigns.game.players) > 0}>No players currently registered for this game.</p>
+    <p :if={length(assigns.game.players) == 0}>No players currently registered for this game.</p>
     <p :for={player <- assigns.game.players}><%= player.name %></p>
 
-    <p>Add a Player</p>
+    <h2>Add a Player</h2>
     <.form
       :let={f}
       for={@player_changeset}
@@ -38,7 +38,7 @@ defmodule HappyHourWeb.GameLive.Admin do
   end
 
   def handle_event("save-player", %{"player" => params}, socket) do
-    _player = Games.add_player(socket.assigns.game, params)
+    Games.add_player(socket.assigns.game, params)
 
     {:noreply,
      socket
