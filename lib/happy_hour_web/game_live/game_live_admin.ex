@@ -4,9 +4,14 @@ defmodule HappyHourWeb.GameLive.Admin do
   alias HappyHour.Games.Player
 
   def mount(params, _session, socket) do
+    game =
+      Games.get_game_by_name!(params["name"])
+      |> Repo.preload(:players)
+
     socket =
       socket
-      |> assign(:game, Games.get_game_by_name!(params["name"]) |> Repo.preload(:players))
+      |> assign(:game, game)
+      |> assign(:players, game.players)
       |> assign(:player_changeset, new_player_changeset())
 
     {:ok, socket}
@@ -16,8 +21,8 @@ defmodule HappyHourWeb.GameLive.Admin do
     ~H"""
     <h1>GameLive <%= assigns.game.name %> Admin</h1>
     <h2>Players</h2>
-    <p :if={length(assigns.game.players) == 0}>No players currently registered for this game.</p>
-    <p :for={player <- assigns.game.players}><%= player.name %></p>
+    <p :if={length(assigns.players) == 0}>No players currently registered for this game.</p>
+    <p :for={player <- assigns.players}><%= player.name %></p>
 
     <h2>Add a Player</h2>
     <.form
@@ -38,11 +43,11 @@ defmodule HappyHourWeb.GameLive.Admin do
   end
 
   def handle_event("save-player", %{"player" => params}, socket) do
-    Games.add_player(socket.assigns.game, params)
+    new_player = Games.add_player(socket.assigns.game, params)
 
     {:noreply,
      socket
-     |> assign(:game, Games.get_game_by_name!(socket.assigns.game.name))
+     |> assign(:players, [new_player | socket.assigns.game.players])
      |> assign(:changeset, new_player_changeset())}
   end
 
